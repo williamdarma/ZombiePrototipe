@@ -10,6 +10,10 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] Camera TopDownCamera;
     [SerializeField] float rotateSpeed;
     [SerializeField] Animator PlayerAnimator;
+    [SerializeField] GameObject MovementJoystick;
+    [SerializeField] Joystick JS;
+    [SerializeField] Joystick JS2;
+
 
     // Start is called before the first frame update
     void Start()
@@ -24,9 +28,15 @@ public class PlayerMovementScript : MonoBehaviour
         //var v = Input.GetAxis("Vertical");
         var h = CrossPlatformInputManager.GetAxis("Horizontal");
         var v = CrossPlatformInputManager.GetAxis("Vertical");
+        h = JS.Horizontal;
+        v = JS.Vertical;
+        var hr = JS2.Horizontal;
+        var vr = JS2.Vertical;
         var targetVector = new Vector3(h, 0, v);
+        var targetRotationVector = new Vector3(hr, 0, vr);
         var movementVector = moveTowardTarget(targetVector);
-        rotateTowardMovementVector(movementVector);
+        //  rotateTowardMovementVector(movementVector);
+        rotateTowardMovementVector(-targetRotationVector);
         PlayerAnimator.SetFloat("MovementAnim",movementVector.magnitude);
     }
 
