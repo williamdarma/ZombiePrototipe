@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ZombieMovement : MonoBehaviour
+public class GameLevelManager : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

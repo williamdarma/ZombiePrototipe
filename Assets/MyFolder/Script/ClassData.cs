@@ -8,6 +8,8 @@ public class ClassData
 
 }
 
+
+
 [System.Serializable]
 public class PlayerClass
 {
@@ -18,7 +20,7 @@ public class PlayerClass
 public class PlayerWeaponClass
 {
     public int bulletClip;
-    public int bulletDamage;
+    public float bulletDamage;
     public float bulletDelay;
     public float bulletReloadTime;
 }
@@ -26,15 +28,15 @@ public class PlayerWeaponClass
 [System.Serializable]
 public class NormalZombieClass
 {
-    public int normalZombieHP;
-    public int normalZombieAttackRange;
+    public float normalZombieHP;
+    public float normalZombieAttackRange;
     public float normalZombieSpeed;
 }
 [System.Serializable]
 public class ClownZombieClass
 {
-    public int clownZombieHP;
-    public int clownZombieAttackRange;
+    public float clownZombieHP;
+    public float clownZombieAttackRange;
     public float clownZombieSpeed;
 }
 
