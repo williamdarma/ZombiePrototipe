@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    public bool topDownMode = false;
+    public bool topDownMode = true;
     [SerializeField] Camera topdownCamera, thirdPersonCamera;
 
     // Start is called before the first frame update

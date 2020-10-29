@@ -14,6 +14,7 @@ public class normalZombieBehaviour : MonoBehaviour
     public Animator ZombieAnimator;
     public ZombieState ZS;
     public ParticleSystem BloodEffect;
+    public GameLevelManager GLM;
 
     [Header("ZombieStats")]
     float normalZombieHP;
@@ -35,6 +36,7 @@ public class normalZombieBehaviour : MonoBehaviour
         agent.speed = normalZombieSpeed;
         ZS = ZombieState.Alive;
         Target = GameObject.FindGameObjectWithTag("Player").transform;
+        GLM = GameObject.FindObjectOfType<GameLevelManager>();
         ZombieAnimator = GetComponent<Animator>();
     }
 

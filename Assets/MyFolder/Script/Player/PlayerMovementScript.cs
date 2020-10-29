@@ -13,8 +13,8 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] float rotateSpeed;
     [SerializeField] Animator PlayerAnimator;
     [SerializeField] GameObject MovementJoystick;
-    [SerializeField] Joystick JS;
-    [SerializeField] Joystick JS2;
+    [SerializeField] Joystick JSMovement;
+    [SerializeField] Joystick JSRotate;
     [SerializeField] PlayerMovement PM;
     [SerializeField] PlayerShooting PS;
     [SerializeField] PlayerBehaviour PB;
@@ -27,6 +27,10 @@ public class PlayerMovementScript : MonoBehaviour
         PB = GetComponent<PlayerBehaviour>();
         CM = GameObject.FindObjectOfType<CameraManager>();
         PlayerSpeed = PB.PC.PlayerSpeed;
+        JSMovement = GameObject.Find("MovementJoystick").GetComponent<Joystick>();
+        JSRotate = GameObject.Find("RotationJoystick").GetComponent<Joystick>();
+        TopDownCamera = GameObject.Find("TopdownCamera").GetComponent<Camera>();
+        TopDownCamera.GetComponent<CameraFollowMovement>().FindPlayer();
     }
 
     // Update is called once per frame
@@ -42,10 +46,10 @@ public class PlayerMovementScript : MonoBehaviour
         }
         if (CM.topDownMode)
         {
-            var h = JS.Horizontal;
-            var v = JS.Vertical;
-            var hr = JS2.Horizontal;
-            var vr = JS2.Vertical;
+            var h = JSMovement.Horizontal;
+            var v = JSMovement.Vertical;
+            var hr = JSRotate.Horizontal;
+            var vr = JSRotate.Vertical;
             var targetVector = new Vector3(h, 0, v);
             var targetRotationVector = new Vector3(hr, 0, vr);
             var movementVector = moveTowardTarget(targetVector);
@@ -59,7 +63,7 @@ public class PlayerMovementScript : MonoBehaviour
             {
                 PM = PlayerMovement.Idle;
             }
-            if (targetRotationVector.magnitude > .8f)
+            if (targetRotationVector.magnitude >= .9f)
             {
                 playerShooting();
             }
@@ -68,8 +72,8 @@ public class PlayerMovementScript : MonoBehaviour
         }
         else
         {
-            var h = JS.Horizontal;
-            var v = JS.Vertical;
+            var h = JSMovement.Horizontal;
+            var v = JSMovement.Vertical;
             var targetVector = new Vector3(h, 0, v);
             var movementVector = moveTowardTarget(-targetVector);
         }

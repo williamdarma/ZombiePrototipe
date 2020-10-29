@@ -8,13 +8,24 @@ public class CameraFollowMovement : MonoBehaviour
     public float smoothSpeed = 12.5f;
     public Vector3 offset;
 
-
+    private void Start()
+    {
+        
+    }
+    public void FindPlayer()
+    {
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+    }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        Vector3 desiredPosition = target.position + offset;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-        transform.position = desiredPosition;
+        if (target!= null)
+        {
+            Vector3 desiredPosition = target.position + offset;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+            transform.position = desiredPosition;
+        }
+
     }
 }

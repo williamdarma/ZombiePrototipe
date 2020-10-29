@@ -11,7 +11,7 @@ public class ClownZombieBehaviour : MonoBehaviour
     public ZombieState CZS;
     public ParticleSystem BloodEffect;
     public GameObject ExplodeEffect;
-
+    public GameLevelManager GLM;
 
     [Header("ZombieStats")]
     float clownZombieHP;
@@ -46,6 +46,7 @@ public class ClownZombieBehaviour : MonoBehaviour
         explotsionForce = 1000;
         Target = GameObject.FindGameObjectWithTag("Player").transform;
         ZombieAnimator = GetComponent<Animator>();
+        GLM = GameObject.FindObjectOfType<GameLevelManager>();
     }
 
     // Update is called once per frame
