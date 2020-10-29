@@ -6,12 +6,18 @@ using UnityEngine.AI;
 public class ClownZombieBehaviour : MonoBehaviour
 {
     public NavMeshAgent agent;
-    public ClownZombieClass CZC;
     public Transform Target;
     public Animator ZombieAnimator;
     public ZombieState CZS;
     public ParticleSystem BloodEffect;
     public GameObject ExplodeEffect;
+
+
+    [Header("ZombieStats")]
+    float clownZombieHP;
+    float clownZombieSpeed;
+    float clownZombieAttackRange;
+    float clownZombieDamage;
     float exploderadius;
     float explotsionForce;
     float explosionDamagetoZombie;
@@ -23,10 +29,16 @@ public class ClownZombieBehaviour : MonoBehaviour
     }
     private void OnEnable()
     {
-        CZC.clownZombieHP = 250;
-        CZC.clownZombieSpeed = 4f;
-        CZC.clownZombieAttackRange = .4f;
-        agent.speed = CZC.clownZombieSpeed;
+        initializeStats();
+    }
+
+    void initializeStats()
+    {
+        clownZombieHP = 250;
+        clownZombieSpeed = 4f;
+        clownZombieAttackRange = .4f;
+        clownZombieDamage = .6f;
+        agent.speed = clownZombieSpeed;
         CZS = ZombieState.Alive;
         exploderadius = 2;
         explosionDamagetoPlayer = 1;
@@ -42,9 +54,9 @@ public class ClownZombieBehaviour : MonoBehaviour
         if (CZS == ZombieState.Alive)
         {
             float distance = Vector3.Distance(gameObject.transform.position, Target.transform.position);
-            if (distance > CZC.clownZombieAttackRange *6)
+            if (distance > clownZombieAttackRange *6)
             {
-                agent.speed = CZC.clownZombieSpeed;
+                agent.speed =clownZombieSpeed;
                 agent.SetDestination(Target.position);
                 ZombieAnimator.SetInteger("ZombieActivity", 1);
             }
@@ -59,12 +71,13 @@ public class ClownZombieBehaviour : MonoBehaviour
     public void ZombieEat()
     {
         float distance = Vector3.Distance(gameObject.transform.position, Target.transform.position);
-        if (distance < CZC.clownZombieAttackRange * 6)
+        if (distance < clownZombieAttackRange * 6)
         {
             print("PlyerTakingDamage");
-            Target.GetComponent<PlayerBehaviour>().PlayerTakingDamage(.6f);
+            Target.GetComponent<PlayerBehaviour>().PlayerTakingDamage(clownZombieDamage);
         }
     }
+
     public void TakingDamage(float damage)
     {
         print("ClownZombietakingDamage");
@@ -72,27 +85,28 @@ public class ClownZombieBehaviour : MonoBehaviour
         {
             return;
         }
-        CZC.clownZombieHP -= damage;
+        clownZombieHP -= damage;
         BloodEffect.Play();
-        if (CZC.clownZombieHP <= 0)
+        if (clownZombieHP <= 0)
         {
+            clownZombieHP = 0;
             ZombieDeath();
         }
 
     }
+
     private void ZombieDeath()
     {
         CZS = ZombieState.Dead;
         StartCoroutine(ClownZombieSpecial());
     }
 
-
     IEnumerator ClownZombieSpecial()
     {
         float temp = 0;
         while (temp <=3)
         {
-            agent.speed = CZC.clownZombieSpeed*2;
+            agent.speed = clownZombieSpeed*2;
             agent.SetDestination(Target.position);
             temp += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -126,6 +140,13 @@ public class ClownZombieBehaviour : MonoBehaviour
 
         }
         gameObject.SetActive(false);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            TakingDamage(40);
+        }
     }
 
 }

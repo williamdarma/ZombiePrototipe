@@ -18,49 +18,63 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] PlayerMovement PM;
     [SerializeField] PlayerShooting PS;
     [SerializeField] PlayerBehaviour PB;
+    [SerializeField] CameraManager CM;
 
 
     // Start is called before the first frame update
     void Start()
     {
         PB = GetComponent<PlayerBehaviour>();
+        CM = GameObject.FindObjectOfType<CameraManager>();
         PlayerSpeed = PB.PC.PlayerSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
-       // var h = Input.GetAxis("Horizontal");  
-       // var v = Input.GetAxis("Vertical");
+        // var h = Input.GetAxis("Horizontal");  
+        // var v = Input.GetAxis("Vertical");
         // var h = CrossPlatformInputManager.GetAxis("Horizontal");
         // var v = CrossPlatformInputManager.GetAxis("Vertical");
         if (!PB.Alive)
         {
             return;
         }
-        var h = JS.Horizontal;
-        var v = JS.Vertical;
-        var hr = JS2.Horizontal;
-        var vr = JS2.Vertical;
-        var targetVector = new Vector3(h, 0, v);
-        var targetRotationVector = new Vector3(hr, 0, vr);
-        var movementVector = moveTowardTarget(targetVector);
-        //  rotateTowardMovementVector(movementVector);
-        rotateTowardMovementVector(-targetRotationVector);
-        if (movementVector.magnitude > 0.2)
+        if (CM.topDownMode)
         {
-            PM = PlayerMovement.Walk;
+            var h = JS.Horizontal;
+            var v = JS.Vertical;
+            var hr = JS2.Horizontal;
+            var vr = JS2.Vertical;
+            var targetVector = new Vector3(h, 0, v);
+            var targetRotationVector = new Vector3(hr, 0, vr);
+            var movementVector = moveTowardTarget(targetVector);
+            //  rotateTowardMovementVector(movementVector);
+            rotateTowardMovementVector(-targetRotationVector);
+            if (movementVector.magnitude > 0.2)
+            {
+                PM = PlayerMovement.Walk;
+            }
+            else
+            {
+                PM = PlayerMovement.Idle;
+            }
+            if (targetRotationVector.magnitude > .8f)
+            {
+                playerShooting();
+            }
+
+            //PlayerAnimator.SetFloat("PlayerActivity", movementVector.magnitude);
         }
         else
         {
-            PM = PlayerMovement.Idle;
-        }
-        if (targetRotationVector.magnitude >.8f)
-        {
-            playerShooting();
+            var h = JS.Horizontal;
+            var v = JS.Vertical;
+            var targetVector = new Vector3(h, 0, v);
+            var movementVector = moveTowardTarget(-targetVector);
         }
         AnimatePlayer();
-        //PlayerAnimator.SetFloat("PlayerActivity", movementVector.magnitude);
+
     }
 
     public void playerShooting()

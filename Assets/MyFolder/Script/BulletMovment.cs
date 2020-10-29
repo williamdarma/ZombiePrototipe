@@ -27,7 +27,7 @@ public class BulletMovment : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //print("kuekue");
-        if (other.CompareTag("normalZombie"))
+       /* if (other.CompareTag("normalZombie"))
         {
             print("normalZombie");
             other.GetComponent<normalZombieBehaviour>().TakingDamage(bulletDamage);
@@ -38,6 +38,6 @@ public class BulletMovment : MonoBehaviour
             print("ClownZombie");
             other.GetComponent<ClownZombieBehaviour>().TakingDamage(bulletDamage);
             destroyBullet();
-        }
+        }*/
     }
 }

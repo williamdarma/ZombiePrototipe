@@ -16,6 +16,16 @@ public class CameraManager : MonoBehaviour
     public void ChangeCameraSetting()
     {
         topDownMode = !topDownMode;
+        if (topDownMode)
+        {
+            topdownCamera.gameObject.SetActive(true);
+            thirdPersonCamera.gameObject.SetActive(false);
+        }
+        else
+        {
+            thirdPersonCamera.gameObject.SetActive(true);
+            topdownCamera.gameObject.SetActive(false);
+        }
 
     }
 }

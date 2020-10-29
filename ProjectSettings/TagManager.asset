@@ -7,6 +7,8 @@ TagManager:
   - normalZombie
   - ClownZombie
   - BosZombie
+  - Zombie
+  - Bullet
   layers:
   - Default
   - TransparentFX

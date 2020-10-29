@@ -9,23 +9,38 @@ public class normalZombieBehaviour : MonoBehaviour
 {
 
     public NavMeshAgent agent;
-    public NormalZombieClass NZC;
     public Transform Target;
     public bool alive;
     public Animator ZombieAnimator;
     public ZombieState ZS;
     public ParticleSystem BloodEffect;
 
+    [Header("ZombieStats")]
+    float normalZombieHP;
+    float normalZombieSpeed ;
+    float normalZombieAttackRange;
+    float normalZombieDamage;
 
     private void OnEnable()
     {
-        NZC.normalZombieHP = 100 + (UnityEngine.Random.Range(0, 4) * 25);
-        NZC.normalZombieSpeed = 3;
-        NZC.normalZombieAttackRange = .4f;
-        agent.speed = NZC.normalZombieSpeed;
+        initialzeStats();
+    }
+
+    void initialzeStats()
+    {
+        normalZombieHP = 100 + (UnityEngine.Random.Range(0, 4) * 25);
+        normalZombieSpeed = 3;
+        normalZombieAttackRange = .4f;
+        normalZombieDamage = .6f;
+        agent.speed = normalZombieSpeed;
         ZS = ZombieState.Alive;
         Target = GameObject.FindGameObjectWithTag("Player").transform;
         ZombieAnimator = GetComponent<Animator>();
+    }
+
+    public void BoostStats(float boost)
+    {
+        normalZombieHP += boost;
     }
     // Start is called before the first frame update
     void Start()
@@ -33,16 +48,15 @@ public class normalZombieBehaviour : MonoBehaviour
         
         
     }
-
     // Update is called once per frame
     void Update()
     {
         if (ZS == ZombieState.Alive)
         {
             float distance = Vector3.Distance(gameObject.transform.position, Target.transform.position);
-            if (distance> NZC.normalZombieAttackRange*6 )
+            if (distance> normalZombieAttackRange*6 )
             {
-                agent.speed = NZC.normalZombieSpeed;
+                agent.speed = normalZombieSpeed;
                 agent.SetDestination(Target.position);
                 // ZombieAnimator.SetInteger()
                 ZombieAnimator.SetInteger("ZombieActivity", 1);
@@ -58,10 +72,10 @@ public class normalZombieBehaviour : MonoBehaviour
     public void ZombieEat()
     {
         float distance = Vector3.Distance(gameObject.transform.position, Target.transform.position);
-        if (distance < NZC.normalZombieAttackRange*6)
+        if (distance < normalZombieAttackRange*6)
         {
             print("PlyerTakingDamage");
-            Target.GetComponent<PlayerBehaviour>().PlayerTakingDamage(.6f);
+            Target.GetComponent<PlayerBehaviour>().PlayerTakingDamage(normalZombieDamage);
         }
     }
 
@@ -73,10 +87,11 @@ public class normalZombieBehaviour : MonoBehaviour
             return;
         }
         BloodEffect.Play();
-        NZC.normalZombieHP -= damage;
+        normalZombieHP -= damage;
 
-        if (NZC.normalZombieHP <=0)
+        if (normalZombieHP <=0)
         {
+            normalZombieHP = 0;
             ZombieDeath();
         }
     }
@@ -85,5 +100,12 @@ public class normalZombieBehaviour : MonoBehaviour
     {
         ZS = ZombieState.Dead;
         gameObject.SetActive(false);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            TakingDamage(40);
+        }
     }
 }
