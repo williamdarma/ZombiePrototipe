@@ -41,8 +41,6 @@ public class PlayerShooting : MonoBehaviour
             peluru.transform.position = bulletSpawnPoint.transform.position;
             peluru.transform.rotation = bulletSpawnPoint.transform.rotation;
             peluru.SetActive(true);
-            print(peluru.transform.position);
-            print(peluru.name);
             jumlahpelet--;
         }
     }

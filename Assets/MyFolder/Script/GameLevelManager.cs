@@ -22,8 +22,8 @@ public class GameLevelManager : MonoBehaviour
     public int DefeatedZombie;
     public int TotalZombieinArea;
     public int TotalZombieinWave;
-    int maxZombieinArea;
-    bool SedangSpecialWave;
+    public int maxZombieinArea;
+    public bool SedangSpecialWave;
     bool GameStart;
     // Start is called before the first frame update
     void Start()
@@ -46,7 +46,7 @@ public class GameLevelManager : MonoBehaviour
             maxZombieinArea = 15;
             StartCoroutine(initializeWave2());
         }
-        else if (SG == StageGame.Stage2)
+        else if (SG == StageGame.Stage3)
         {
             maxZombieinArea = 20;
             StartCoroutine(initializeWave3());
@@ -210,6 +210,7 @@ public class GameLevelManager : MonoBehaviour
         GameObject clown = Instantiate(ClownZ);
         int tempClown = UnityEngine.Random.Range(0, tempspawnPoint.Count);
         clown.transform.position = tempspawnPoint[tempClown].transform.position;
+        clown.SetActive(true);
         tempspawnPoint.RemoveAt(tempClown);
         TotalZombieinWave++;
         for (int i = 0; i < 2; i++)
@@ -219,6 +220,7 @@ public class GameLevelManager : MonoBehaviour
             {
                 GameObject normalZ = Instantiate(NormalZ[UnityEngine.Random.Range(0, NormalZ.Length)]);
                 normalZ.transform.position = tempspawnPoint[randomtemp].transform.position;
+                normalZ.SetActive(true);
                 TotalZombieinWave++;
 
             }
@@ -237,6 +239,7 @@ public class GameLevelManager : MonoBehaviour
         GameObject clown = Instantiate(ClownZ);
         int tempClown = UnityEngine.Random.Range(0, tempspawnPoint.Count);
         clown.transform.position = tempspawnPoint[tempClown].transform.position;
+        clown.SetActive(true);
         tempspawnPoint.RemoveAt(tempClown);
         TotalZombieinWave++;
 
@@ -246,6 +249,7 @@ public class GameLevelManager : MonoBehaviour
             GameObject normalZ = Instantiate(NormalZ[UnityEngine.Random.Range(0, NormalZ.Length)]);
             normalZ.transform.position = tempspawnPoint[randomtemp].transform.position;
             normalZ.GetComponent<normalZombieBehaviour>().BoostStats(50);
+            normalZ.SetActive(true);
             TotalZombieinWave++;
 
         }
@@ -257,11 +261,13 @@ public class GameLevelManager : MonoBehaviour
             GameObject normalZ = Instantiate(NormalZ[UnityEngine.Random.Range(0, NormalZ.Length)]);
             normalZ.transform.position = tempspawnPoint[randomtemp1].transform.position;
             normalZ.GetComponent<normalZombieBehaviour>().BoostStats(50);
+            normalZ.SetActive(true);
             TotalZombieinWave++;
         }
 
         GameObject clown1 = Instantiate(ClownZ);
         clown1.transform.position = tempspawnPoint[randomtemp1].transform.position;
+        clown1.SetActive(true);
         TotalZombieinWave++;
         tempspawnPoint.RemoveAt(randomtemp1);
     }

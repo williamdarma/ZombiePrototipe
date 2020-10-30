@@ -141,6 +141,7 @@ public class ClownZombieBehaviour : MonoBehaviour
 
         }
         gameObject.SetActive(false);
+        GLM.ZombieDefeated();
     }
     private void OnTriggerEnter(Collider other)
     {

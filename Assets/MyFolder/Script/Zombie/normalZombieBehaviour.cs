@@ -101,6 +101,7 @@ public class normalZombieBehaviour : MonoBehaviour
     private void ZombieDeath()
     {
         ZS = ZombieState.Dead;
+        GLM.ZombieDefeated();
         gameObject.SetActive(false);
     }
     private void OnTriggerEnter(Collider other)
@@ -108,6 +109,7 @@ public class normalZombieBehaviour : MonoBehaviour
         if (other.CompareTag("Bullet"))
         {
             TakingDamage(40);
+            other.gameObject.SetActive(false);
         }
     }
 }
