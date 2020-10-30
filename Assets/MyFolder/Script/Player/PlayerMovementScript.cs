@@ -46,8 +46,10 @@ public class PlayerMovementScript : MonoBehaviour
         }
         if (CM.topDownMode)
         {
-            var h = JSMovement.Horizontal;
-            var v = JSMovement.Vertical;
+            //var h = JSMovement.Horizontal;
+           // var v = JSMovement.Vertical;
+             var h = Input.GetAxis("Horizontal");  
+             var v = Input.GetAxis("Vertical");
             var hr = JSRotate.Horizontal;
             var vr = JSRotate.Vertical;
             var targetVector = new Vector3(h, 0, v);

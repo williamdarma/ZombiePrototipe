@@ -21019,12 +21019,16 @@ MonoBehaviour:
   - {fileID: 3579188484368668377, guid: a491eec4ac57d8b419931cddf37a318e, type: 3}
   - {fileID: 7999553039351500540, guid: 35cc78c8746dd534b8eaff4a5913a000, type: 3}
   - {fileID: 1848718697195222017, guid: 34b2833cc3675434ebb5839480449819, type: 3}
-  ClownZ: {fileID: 0}
-  BossZ: {fileID: 0}
+  ClownZ: {fileID: 2050245617}
+  BossZ: {fileID: 1190701515}
   Player: {fileID: 9220298073620105768, guid: b67aa8719d0076f479447d58c59d45db, type: 3}
-  ZombieSpawnPoint: []
+  ZombieSpawnPoint:
+  - {fileID: 1156732810}
+  - {fileID: 1650781828}
+  - {fileID: 1900488649}
+  - {fileID: 1580498250}
   PlayerSpawnPoint: {fileID: 2053690112}
-  BossSpawnPoint: {fileID: 0}
+  BossSpawnPoint: {fileID: 484553640}
   jumlahpooling: 5
   listNormalZombie: []
   Wave: 0
@@ -26479,6 +26483,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 415068, guid: 7a80163190090ac4cad7a420833959c0,
     type: 3}
   m_PrefabInstance: {fileID: 2039892071}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2050245617 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6513921115817443966, guid: 41423778aaa58e949b90f374b917a537,
+    type: 3}
+  m_PrefabInstance: {fileID: 1113947999}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2053690111
 GameObject:
