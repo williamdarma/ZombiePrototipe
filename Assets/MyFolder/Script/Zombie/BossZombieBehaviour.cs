@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
+using TMPro;
 
 public class BossZombieBehaviour : MonoBehaviour
 {
@@ -13,11 +15,16 @@ public class BossZombieBehaviour : MonoBehaviour
     bool stateTransition;
     [Header("ZombieStats")]
     float BossZombieHP;
+    float bossmaxHP;
     float BossZombieSpeed;
     float BossZombieAttackRange;
     float BossZombieScale;
     float BossZombieDamage;
     int BossZombieStage;
+
+    [Header("UI")]
+    public Image bossHPBar;
+    public TextMeshProUGUI bossStage;
     
 
     private void OnEnable()
@@ -52,19 +59,26 @@ public class BossZombieBehaviour : MonoBehaviour
             BossZombieScale = 1f;
             BossZombieDamage = .85f;
         }
+        bossmaxHP = BossZombieHP;
         agent.speed = BossZombieSpeed;
         gameObject.transform.localScale = new Vector3(BossZombieScale, BossZombieScale, BossZombieScale);
         Target = GameObject.FindGameObjectWithTag("Player").transform;
         ZombieAnimator = GetComponent<Animator>();
         BZS = ZombieState.Alive;
         stateTransition = false;
+        ChangeSliderHPBar(BossZombieHP);
     }
 
+
+    void ChangeSliderHPBar(float amount)
+    {
+        bossHPBar.fillAmount = amount / bossmaxHP;
+    }
 
     public void ZombieEat()
     {
         float distance = Vector3.Distance(gameObject.transform.position, Target.transform.position);
-        if (distance < BossZombieAttackRange*2)
+        if (distance < BossZombieAttackRange)
         {
             print("PlyerTakingDamage");
             Target.GetComponent<PlayerBehaviour>().PlayerTakingDamage(BossZombieDamage);
@@ -81,11 +95,13 @@ public class BossZombieBehaviour : MonoBehaviour
             return;
         }
         BossZombieHP -= damage;
+        ChangeSliderHPBar(BossZombieHP);
         if (BossZombieHP<= 0)
         {
             BossZombieHP = 0;
             checkifBossDied();
         }
+
     }
 
     private void checkifBossDied()

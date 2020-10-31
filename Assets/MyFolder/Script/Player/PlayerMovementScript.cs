@@ -19,6 +19,7 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] PlayerShooting PS;
     [SerializeField] PlayerBehaviour PB;
     [SerializeField] CameraManager CM;
+    bool reloading;
 
     public AudioSource walk;
 
@@ -89,12 +90,14 @@ public class PlayerMovementScript : MonoBehaviour
 
     public void playerShooting()
     {
+        if (reloading)
+        {
+            return;
+        }
         if (PS.jumlahpelet<=0)
         {
             PM = PlayerMovement.Reload;
-            PB.Reload.gameObject.SetActive(true);
-            PS.reload.Play();
-            Invoke("reloadBullet", 2.5f);
+            StartCoroutine(iereloading());
         }
         else
         {
@@ -105,6 +108,16 @@ public class PlayerMovementScript : MonoBehaviour
     void reloadBullet()
     {
         PB.Reload.gameObject.SetActive(false);
+        PS.Reload();
+    }
+    IEnumerator iereloading()
+    {
+        reloading = true;
+        PS.reload.Play();
+        PB.Reload.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2.5f);
+        PB.Reload.gameObject.SetActive(false);
+        reloading = false;
         PS.Reload();
     }
 

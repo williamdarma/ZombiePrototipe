@@ -34,12 +34,14 @@ public class GameLevelManager : MonoBehaviour
     public TextMeshProUGUI EnemiesRemaining;
 
     public GameObject FinishGamePanel;
+    public GameObject BossHealthBar;
 
     public AudioSource ZombieMoan;
 
     // Start is called before the first frame update
     void Start()
     {
+        Player.transform.position = PlayerSpawnPoint.position;
         SG = StageGame.Stage1;
         Wave = 0;
         WaveStage.text = "WAVE : " + 1;
@@ -48,7 +50,7 @@ public class GameLevelManager : MonoBehaviour
 
     void initializeGame()
     {
-        Player.transform.position = PlayerSpawnPoint.position;
+
         if (SG == StageGame.Stage1)
         {
             maxZombieinArea = 10;
@@ -123,7 +125,8 @@ public class GameLevelManager : MonoBehaviour
         for (int i = 0; i < ZombieSpawnPoint.Length; i++)
         {
             float distance = Vector3.Distance(ZombieSpawnPoint[i].position, Player.transform.position);
-            if (distance > 5)
+            print(distance);
+            if (distance > 20)
             {
                 tempSpawnPoint.Add(ZombieSpawnPoint[i].transform);
             }
@@ -292,6 +295,7 @@ public class GameLevelManager : MonoBehaviour
         GameObject bossZombie = Instantiate(BossZ);
         bossZombie.transform.position = BossSpawnPoint.transform.position;
         bossZombie.SetActive(true);
+        BossHealthBar.SetActive(true);
     }
 
     public void BossZombiedefeated()

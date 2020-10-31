@@ -26,6 +26,9 @@ public class BulletMovment : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-  
+        if (other.CompareTag("Props"))
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

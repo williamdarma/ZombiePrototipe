@@ -9,6 +9,8 @@ TagManager:
   - BosZombie
   - Zombie
   - Bullet
+  - Props
+  - Boundaries
   layers:
   - Default
   - TransparentFX

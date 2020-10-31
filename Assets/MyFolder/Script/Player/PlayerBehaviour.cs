@@ -71,7 +71,7 @@ public class PlayerBehaviour : MonoBehaviour
         while (Alive)
         {
             yield return new WaitForSeconds(4f);
-            playerHealth += .05f;
+            playerHealth += .08f;
             if (playerHealth>= maxHealth)
             {
                 playerHealth = maxHealth;
