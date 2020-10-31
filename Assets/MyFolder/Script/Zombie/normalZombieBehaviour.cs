@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public enum ZombieState { Alive, Eating, Dead };
 public class normalZombieBehaviour : MonoBehaviour
@@ -21,6 +22,10 @@ public class normalZombieBehaviour : MonoBehaviour
     float normalZombieSpeed ;
     float normalZombieAttackRange;
     float normalZombieDamage;
+    float maxZombieHP;
+
+    [Header("UI")]
+    public Image healthBar;
 
     private void OnEnable()
     {
@@ -30,6 +35,7 @@ public class normalZombieBehaviour : MonoBehaviour
     void initialzeStats()
     {
         normalZombieHP = 100 + (UnityEngine.Random.Range(0, 4) * 25);
+        maxZombieHP = normalZombieHP;
         normalZombieSpeed = 3;
         normalZombieAttackRange = .4f;
         normalZombieDamage = .6f;
@@ -43,12 +49,7 @@ public class normalZombieBehaviour : MonoBehaviour
     public void BoostStats(float boost)
     {
         normalZombieHP += boost;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-        
+        maxZombieHP = normalZombieHP;
     }
     // Update is called once per frame
     void Update()
@@ -60,7 +61,6 @@ public class normalZombieBehaviour : MonoBehaviour
             {
                 agent.speed = normalZombieSpeed;
                 agent.SetDestination(Target.position);
-                // ZombieAnimator.SetInteger()
                 ZombieAnimator.SetInteger("ZombieActivity", 1);
             }
             else
@@ -83,17 +83,17 @@ public class normalZombieBehaviour : MonoBehaviour
 
     public void TakingDamage(float damage)
     {
-        print("normalZombietakingDamage");
         if (ZS == ZombieState.Dead)
         {
             return;
         }
         BloodEffect.Play();
         normalZombieHP -= damage;
-
+        healthBar.fillAmount = normalZombieHP / maxZombieHP;
         if (normalZombieHP <=0)
         {
             normalZombieHP = 0;
+
             ZombieDeath();
         }
     }
@@ -101,15 +101,8 @@ public class normalZombieBehaviour : MonoBehaviour
     private void ZombieDeath()
     {
         ZS = ZombieState.Dead;
-        GLM.ZombieDefeated();
-        gameObject.SetActive(false);
+        GLM.ZombieDefeated();     
+        Destroy(gameObject);
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Bullet"))
-        {
-            TakingDamage(40);
-            other.gameObject.SetActive(false);
-        }
-    }
+
 }

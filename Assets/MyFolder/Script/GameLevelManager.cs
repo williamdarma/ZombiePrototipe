@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 
 public enum StageGame {Stage1, Stage2, Stage3};
@@ -24,12 +25,24 @@ public class GameLevelManager : MonoBehaviour
     public int TotalZombieinWave;
     public int maxZombieinArea;
     public bool SedangSpecialWave;
+    public bool BossWave;
     bool GameStart;
+
+
+    [Header("UI")]
+    public TextMeshProUGUI WaveStage;
+    public TextMeshProUGUI EnemiesRemaining;
+
+    public GameObject FinishGamePanel;
+
+    public AudioSource ZombieMoan;
+
     // Start is called before the first frame update
     void Start()
     {
         SG = StageGame.Stage1;
         Wave = 0;
+        WaveStage.text = "WAVE : " + 1;
         initializeGame();
     }
 
@@ -88,13 +101,12 @@ public class GameLevelManager : MonoBehaviour
     IEnumerator initializeWave3()
     {
         yield return new WaitForSeconds(1f);
-        int temp = 0;
-        while (temp < maxZombieinArea)
+        BossWave = true;
+        while (BossWave)
         {
             if (TotalZombieinArea<15)
             {
                 spawnNormalZombie(2);
-                temp++;
                 yield return new WaitForSeconds(2f);
             }
             else
@@ -131,50 +143,55 @@ public class GameLevelManager : MonoBehaviour
         }
   
             TotalZombieinArea++;
-
-
+            EnemiesRemaining.text = TotalZombieinArea.ToString();
     }
 
     public void ZombieDefeated()
     {
-
        if (!SedangSpecialWave)
        {
             TotalZombieinArea--;
+            EnemiesRemaining.text = TotalZombieinArea.ToString();
             if (SG == StageGame.Stage3)
             {
                 DefeatedZombie++;
 
                 if (DefeatedZombie == 20)
                 {
-
                     SpawnBoss();
                 }
+                if (TotalZombieinArea<= 0)
+                {
+                    finishGame(true);
+                }
             }
-            if (TotalZombieinArea<=0)
+            else
             {
-                if (SG != StageGame.Stage3)
+                if (TotalZombieinArea <= 0)
                 {
                     SpecialWave();
                 }
-
-            }
+            }  
 
        }
        else
        {
             TotalZombieinWave--;
+            EnemiesRemaining.text = TotalZombieinWave.ToString();
             if (TotalZombieinWave <= 0)
             {
                 SedangSpecialWave = false;
                 Wave++;
+                WaveStage.text = Wave + 1.ToString();
                 if (Wave == 1)
                 {
+                    WaveStage.text = "WAVE : " + 2;
                     SG = StageGame.Stage2;
                 }
                 else if (Wave == 2)
                 {
-                    SG = StageGame.Stage3;
+                    WaveStage.text = "FINAL WAVE";
+                       SG = StageGame.Stage3;
                 }
                 initializeGame();
             }
@@ -192,10 +209,6 @@ public class GameLevelManager : MonoBehaviour
         else if (SG == StageGame.Stage2)
         {
             SpawnSpecialWave2();
-        }
-        else if (SG == StageGame.Stage3)
-        {
-
         }
     }
 
@@ -226,6 +239,7 @@ public class GameLevelManager : MonoBehaviour
             }
             tempspawnPoint.RemoveAt(randomtemp);
         }
+        EnemiesRemaining.text = TotalZombieinWave.ToString();
 
     }
 
@@ -269,6 +283,7 @@ public class GameLevelManager : MonoBehaviour
         clown1.transform.position = tempspawnPoint[randomtemp1].transform.position;
         clown1.SetActive(true);
         TotalZombieinWave++;
+        EnemiesRemaining.text = TotalZombieinWave.ToString();
         tempspawnPoint.RemoveAt(randomtemp1);
     }
 
@@ -276,14 +291,41 @@ public class GameLevelManager : MonoBehaviour
     {
         GameObject bossZombie = Instantiate(BossZ);
         bossZombie.transform.position = BossSpawnPoint.transform.position;
+        bossZombie.SetActive(true);
     }
 
+    public void BossZombiedefeated()
+    {
+        BossWave = false;
+    }
 
+    public void finishGame(bool Win)
+    {
+        if (Win)
+        {
+            FinishGamePanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Congratulation";
+            FinishGamePanel.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "you Survived";
+
+        }
+        else
+        {
+            FinishGamePanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "GAME OVER";
+            FinishGamePanel.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "YOU'RE DEAD";
+        }
+        FinishGamePanel.SetActive(true);
+    }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (TotalZombieinArea > 0 || TotalZombieinWave > 0)
+        {
+            ZombieMoan.gameObject.SetActive(true);
+        }
+        else
+        {
+            ZombieMoan.gameObject.SetActive(false);
+        }
     }
 }
 

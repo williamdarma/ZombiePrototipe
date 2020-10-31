@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class ClownZombieBehaviour : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class ClownZombieBehaviour : MonoBehaviour
     float explotsionForce;
     float explosionDamagetoZombie;
     float explosionDamagetoPlayer;
+    float maxZombieHP;
+
+    [Header("UI")]
+    public Image healthBar;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +40,7 @@ public class ClownZombieBehaviour : MonoBehaviour
     void initializeStats()
     {
         clownZombieHP = 250;
+        maxZombieHP = clownZombieHP;
         clownZombieSpeed = 4f;
         clownZombieAttackRange = .4f;
         clownZombieDamage = .6f;
@@ -86,7 +92,9 @@ public class ClownZombieBehaviour : MonoBehaviour
         {
             return;
         }
+
         clownZombieHP -= damage;
+        healthBar.fillAmount = clownZombieHP / maxZombieHP;
         BloodEffect.Play();
         if (clownZombieHP <= 0)
         {
@@ -140,15 +148,9 @@ public class ClownZombieBehaviour : MonoBehaviour
             }
 
         }
-        gameObject.SetActive(false);
+        Destroy(gameObject);
         GLM.ZombieDefeated();
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Bullet"))
-        {
-            TakingDamage(40);
-        }
-    }
+ 
 
 }

@@ -17,17 +17,18 @@ public class BossZombieBehaviour : MonoBehaviour
     float BossZombieAttackRange;
     float BossZombieScale;
     float BossZombieDamage;
-    int BossZombieState;
+    int BossZombieStage;
     
 
     private void OnEnable()
     {
-        initializeStats(0);
+        BossZombieStage = 0;
+        initializeStats(BossZombieStage);
     }
 
     private void initializeStats(int State)
     {
-        if (BossZombieState == 0)
+        if (BossZombieStage == 0)
         {
             BossZombieHP = 2500;
             BossZombieSpeed = 11;
@@ -35,7 +36,7 @@ public class BossZombieBehaviour : MonoBehaviour
             BossZombieScale = 2.5f;
             BossZombieDamage = 2f;
         }
-        else if(BossZombieState == 1)
+        else if(BossZombieStage == 1)
         {
             BossZombieHP = 1600;
             BossZombieSpeed = 8;
@@ -43,7 +44,7 @@ public class BossZombieBehaviour : MonoBehaviour
             BossZombieScale = 1.8f;
             BossZombieDamage = 1.3f;
         }
-        else if (BossZombieState == 1)
+        else if (BossZombieStage == 2)
         {
             BossZombieHP = 1600;
             BossZombieSpeed = 5;
@@ -59,6 +60,16 @@ public class BossZombieBehaviour : MonoBehaviour
         stateTransition = false;
     }
 
+
+    public void ZombieEat()
+    {
+        float distance = Vector3.Distance(gameObject.transform.position, Target.transform.position);
+        if (distance < BossZombieAttackRange*2)
+        {
+            print("PlyerTakingDamage");
+            Target.GetComponent<PlayerBehaviour>().PlayerTakingDamage(BossZombieDamage);
+        }
+    }
     public void TakingDamage(float damage)
     {
         if (BZS == ZombieState.Dead)
@@ -84,11 +95,11 @@ public class BossZombieBehaviour : MonoBehaviour
 
     IEnumerator iecheckifBossDied()
     {
-        if (BossZombieState < 2)
+        if (BossZombieStage < 2)
         {
             stateTransition = true;
             yield return new WaitForSeconds(2f);
-            initializeStats(BossZombieState + 1);
+            initializeStats(BossZombieStage + 1);
         }
         else
         {
@@ -105,7 +116,22 @@ public class BossZombieBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (BZS == ZombieState.Alive)
+        {
+            float distance = Vector3.Distance(gameObject.transform.position, Target.transform.position);
+            if (distance > BossZombieAttackRange * 6)
+            {
+                agent.speed = BossZombieSpeed;
+                agent.SetDestination(Target.position);
+                // ZombieAnimator.SetInteger()
+                ZombieAnimator.SetInteger("ZombieActivity", 1);
+            }
+            else
+            {
+                agent.speed = 0;
+                ZombieAnimator.SetInteger("ZombieActivity", 2);
+            }
+        }
     }
     private void OnTriggerEnter(Collider other)
     {

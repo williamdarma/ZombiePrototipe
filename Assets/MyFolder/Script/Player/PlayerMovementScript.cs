@@ -15,10 +15,12 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] GameObject MovementJoystick;
     [SerializeField] Joystick JSMovement;
     [SerializeField] Joystick JSRotate;
-    [SerializeField] PlayerMovement PM;
+    public PlayerMovement PM;
     [SerializeField] PlayerShooting PS;
     [SerializeField] PlayerBehaviour PB;
     [SerializeField] CameraManager CM;
+
+    public AudioSource walk;
 
 
     // Start is called before the first frame update
@@ -26,7 +28,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         PB = GetComponent<PlayerBehaviour>();
         CM = GameObject.FindObjectOfType<CameraManager>();
-        PlayerSpeed = PB.PC.PlayerSpeed;
+        PlayerSpeed = PB.playerSpeed;
         JSMovement = GameObject.Find("MovementJoystick").GetComponent<Joystick>();
         JSRotate = GameObject.Find("RotationJoystick").GetComponent<Joystick>();
         TopDownCamera = GameObject.Find("TopdownCamera").GetComponent<Camera>();
@@ -46,10 +48,10 @@ public class PlayerMovementScript : MonoBehaviour
         }
         if (CM.topDownMode)
         {
-            //var h = JSMovement.Horizontal;
-           // var v = JSMovement.Vertical;
-             var h = Input.GetAxis("Horizontal");  
-             var v = Input.GetAxis("Vertical");
+            var h = JSMovement.Horizontal;
+            var v = JSMovement.Vertical;
+            //var h = Input.GetAxis("Horizontal");  
+           // var v = Input.GetAxis("Vertical");
             var hr = JSRotate.Horizontal;
             var vr = JSRotate.Vertical;
             var targetVector = new Vector3(h, 0, v);
@@ -60,10 +62,12 @@ public class PlayerMovementScript : MonoBehaviour
             if (movementVector.magnitude > 0.2)
             {
                 PM = PlayerMovement.Walk;
+                walk.gameObject.SetActive(true);
             }
             else
             {
                 PM = PlayerMovement.Idle;
+                walk.gameObject.SetActive(false);
             }
             if (targetRotationVector.magnitude >= .9f)
             {
@@ -88,6 +92,8 @@ public class PlayerMovementScript : MonoBehaviour
         if (PS.jumlahpelet<=0)
         {
             PM = PlayerMovement.Reload;
+            PB.Reload.gameObject.SetActive(true);
+            PS.reload.Play();
             Invoke("reloadBullet", 2.5f);
         }
         else
@@ -98,8 +104,8 @@ public class PlayerMovementScript : MonoBehaviour
     
     void reloadBullet()
     {
-        PS.jumlahpelet = 24;
-        PM = PlayerMovement.Walk;
+        PB.Reload.gameObject.SetActive(false);
+        PS.Reload();
     }
 
     void AnimatePlayer()

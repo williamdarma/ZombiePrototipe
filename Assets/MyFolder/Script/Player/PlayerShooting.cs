@@ -10,9 +10,15 @@ public class PlayerShooting : MonoBehaviour
     public List<GameObject> listBullet;
     public int jumlahPooling;
     public int jumlahpelet = 24;
+    PlayerBehaviour pb;
+    PlayerMovementScript pms;
+    public AudioSource reload;
+    public AudioSource shoot;
     // Start is called before the first frame update
     void Start()
     {
+        pb = GetComponent<PlayerBehaviour>();
+        pms = GetComponent<PlayerMovementScript>();
         for (int i = 0; i < jumlahPooling; i++)
         {
             GameObject temp = Instantiate(playerBullet);
@@ -41,12 +47,16 @@ public class PlayerShooting : MonoBehaviour
             peluru.transform.position = bulletSpawnPoint.transform.position;
             peluru.transform.rotation = bulletSpawnPoint.transform.rotation;
             peluru.SetActive(true);
+            shoot.Play();
             jumlahpelet--;
+            pb.ChangeuiBullet(jumlahpelet);
         }
     }
     public void Reload()
     {
-
+        jumlahpelet = 24;
+        pb.ChangeuiBullet(jumlahpelet);
+        pms.PM = PlayerMovement.Walk;
     }
 
     // Update is called once per frame
